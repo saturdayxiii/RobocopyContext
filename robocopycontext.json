@@ -1,0 +1,14 @@
+{
+    "version": "1.0.0",
+    "description": "Explorer-integrated Robocopy staging and paste tool",
+    "homepage": "https://github.com/saturdayxiii/RobocopyContext",
+    "license": "MIT",
+    "url": "https://your.repo/robocopycontext.zip",
+    "hash": "PUT_REAL_HASH_HERE",
+    "installer": {
+        "script": "install.ps1"
+    },
+    "uninstaller": {
+        "script": "uninstall.ps1"
+    }
+}
