@@ -6,9 +6,15 @@
     "url": "https://github.com/saturdayxiii/RobocopyContext/releases/download/v0.9/RobocopyContext.zip",
     "hash": "F681DCA98FDC84EF489E0813B232F9477EE72F22046A0304DAFD49B705E33F91",
     "installer": {
-        "script": ".\\install.ps1"
-    },
+    "script": [
+        "Write-Host 'Running installer...'",
+        ".\\install.ps1"
+    ]
+}
+
     "uninstaller": {
-        "script": ".\\uninstall.ps1"
+        "script": [
+            ".\\uninstall.ps1"
+        ]
     }
 }
