@@ -6,12 +6,9 @@
     "url": "https://github.com/saturdayxiii/RobocopyContext/releases/download/v0.9/RobocopyContext.zip",
     "hash": "F681DCA98FDC84EF489E0813B232F9477EE72F22046A0304DAFD49B705E33F91",
     "installer": {
-    "script": [
-        "Write-Host 'Running installer...'",
-        "installer": {
-            "script": "powershell -NoProfile -ExecutionPolicy Bypass -File \"$dir\\install.ps1\""
-        },
-        "uninstaller": {
-            "script": "powershell -NoProfile -ExecutionPolicy Bypass -File \"$dir\\uninstall.ps1\""
-        }
+        "script": "powershell -NoProfile -ExecutionPolicy Bypass -File \"$dir\\install.ps1\""
+    },
+    "uninstaller": {
+        "script": "powershell -NoProfile -ExecutionPolicy Bypass -File \"$dir\\uninstall.ps1\""
+    }
 }
