@@ -8,13 +8,10 @@
     "installer": {
     "script": [
         "Write-Host 'Running installer...'",
-        ".\\install.ps1"
-    ]
-}
-
-    "uninstaller": {
-        "script": [
-            ".\\uninstall.ps1"
-        ]
-    }
+        "installer": {
+            "script": "powershell -NoProfile -ExecutionPolicy Bypass -File \"$dir\\install.ps1\""
+        },
+        "uninstaller": {
+            "script": "powershell -NoProfile -ExecutionPolicy Bypass -File \"$dir\\uninstall.ps1\""
+        }
 }
