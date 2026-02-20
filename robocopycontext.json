@@ -3,8 +3,8 @@
     "description": "Explorer-integrated Robocopy staging and paste tool",
     "homepage": "https://github.com/saturdayxiii/RobocopyContext",
     "license": "MIT",
-    "url": "https://github.com/saturdayxiii/RobocopyContext/releases/download/v0.9/RobocopyContext.zip",
-    "hash": "F681DCA98FDC84EF489E0813B232F9477EE72F22046A0304DAFD49B705E33F91",
+    "url": "https://github.com/saturdayxiii/RobocopyContext/releases/download/1/RobocopyContext-v1.zip",
+    "hash": "89e6a1a56c311ce8a79646365d8795a8d7c7aa828f097e78317fd139ef09fd03",
     "installer": {
         "script": "powershell -NoProfile -ExecutionPolicy Bypass -File \"$dir\\install.ps1\""
     },
