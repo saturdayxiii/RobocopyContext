@@ -9,7 +9,7 @@ else {
     $ScoopRoot = Join-Path $env:USERPROFILE "scoop"
 }
 
-$ScriptPath = Join-Path $ScoopRoot "apps\robocopycontext\current\robocopy_paste_profile.ps1"
+$ScriptPath = Join-Path $ScoopRoot "apps\robocopycontext\current\bin\robocopy_paste_profile.ps1"
 
 if (!(Test-Path -LiteralPath $ScriptPath)) {
     Write-Host "Robocopy Tools not found in Scoop directory."
