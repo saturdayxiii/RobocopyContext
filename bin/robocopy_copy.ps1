@@ -1,19 +1,23 @@
 #Limitation: only works for Windows Explorer
 
+#Limitation: If multiple explorer windows/tabs open with selections, it will only stage the first opened window.
+
+# Bug: opens a shell window for every selected file, they all say the exact same thing so it must be looping everything per selection.
+
+# Bug: works 90% of the time but sometimes fails to write, or writes duplicates.  Seems to be caused by simultaneously writing to the staging txt in TEMP.
+
+# Future feature potential, except it clutters the menu> add option to add new files to current staging or begin a new staging.
+
 Add-Type -AssemblyName System.Windows.Forms
 
 $StageFile = "$env:TEMP\robocopy_staged.txt"
 
 # Get selected items from active Explorer window
 
-#Limitation: If multiple explorer windows/tabs open with selections, it will only stage the first opened window.
-
 $shell   = New-Object -ComObject Shell.Application
 $windows = $shell.Windows()
 
 $NewItems = @()
-
-# Bug: opens a shell window for every selected file, they all say the exact same thing so it must be looping everything per selection.
 
 foreach ($window in $windows) {
     try {
