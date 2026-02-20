@@ -1,64 +1,76 @@
 $ErrorActionPreference = "Stop"
 
-Write-Host "Installing RobocopyContext menus..."
+Write-Host "Installing RobocopyContext menus... Window will close when finished. Please be patient."
+Write-Host "Working on task 1 of 6"
 
-$AppRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+# Resolve app root correctly (works under Scoop)
+$AppRoot = $PSScriptRoot
 $BinPath = Join-Path $AppRoot "bin"
 
-$CopyScript     = Join-Path $BinPath "robocopy_copy.ps1"
-$PasteLauncher  = Join-Path $BinPath "robocopy_paste_launcher.ps1"
+$CopyScript    = Join-Path $BinPath "robocopy_copy.ps1"
+$PasteLauncher = Join-Path $BinPath "robocopy_paste_launcher.ps1"
 
-if (!(Test-Path $CopyScript))    { throw "Copy script missing." }
-if (!(Test-Path $PasteLauncher)) { throw "Paste launcher missing." }
+if (!(Test-Path $CopyScript))    { throw "Copy script missing at $CopyScript" }
+if (!(Test-Path $PasteLauncher)) { throw "Paste launcher missing at $PasteLauncher" }
 
-# =============================
-# 1 STAGE (File/Folder menu)
-# =============================
+# Use absolute PowerShell path (prevents “no associated app”)
+$PowerShellExe = "$($PSHOME)\powershell.exe"
 
-$StageBase = "HKCU:\Software\Classes\*\shell\RoboCopyCopy"
-New-Item -Path $StageBase -Force | Out-Null
-Set-ItemProperty -Path $StageBase -Name "(default)" -Value "RobocopyCopy"
-Set-ItemProperty -Path $StageBase -Name "Icon" -Value "imageres.dll,-5302"
+# =====================================================
+# 1️ STAGE (files + folders)
+# =====================================================
+Write-Host "Working on task 2 of 6... this one takes forever as it refreshes classes*"
+$StageLocations = @(
+    "HKCU:\Software\Classes\*\shell\RoboCopyStage",
+    "HKCU:\Software\Classes\Directory\shell\RoboCopyStage"
+)
 
-$StageCmd = "$StageBase\command"
-New-Item -Path $StageCmd -Force | Out-Null
+foreach ($Base in $StageLocations) {
 
-$StageCommandString = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$CopyScript`""
-Set-ItemProperty -Path $StageCmd -Name "(default)" -Value $StageCommandString
+    New-Item -Path $Base -Force | Out-Null
+    Set-ItemProperty -Path $Base -Name "MUIVerb" -Value "Stage with Robocopy"
+    Set-ItemProperty -Path $Base -Name "Icon" -Value "imageres.dll,-5302"
 
-# Also register for directories specifically (ensures folder support)
-$DirStageBase = "HKCU:\Software\Classes\Directory\shell\RoboCopyCopy"
-Copy-Item -Path $StageBase -Destination $DirStageBase -Recurse -Force
+    $Cmd = Join-Path $Base "command"
+    New-Item -Path $Cmd -Force | Out-Null
 
-# =============================
-# 2 PASTE (Background menu)
-# =============================
+    $CommandString = "`"$PowerShellExe`" -NoProfile -ExecutionPolicy Bypass -File `"$CopyScript`""
+    Set-ItemProperty -Path $Cmd -Name "(default)" -Value $CommandString
+}
 
+# =====================================================
+# 2️ PASTE (background cascading submenu)
+# =====================================================
+Write-Host "Working on task 3 of 6"
 $PasteBase = "HKCU:\Software\Classes\Directory\Background\shell\RoboCopyPaste"
+
 New-Item -Path $PasteBase -Force | Out-Null
-Set-ItemProperty -Path $PasteBase -Name "(default)" -Value "Robocopy Paste"
+Set-ItemProperty -Path $PasteBase -Name "MUIVerb" -Value "Robocopy Paste"
 Set-ItemProperty -Path $PasteBase -Name "Icon" -Value "imageres.dll,-5302"
+Set-ItemProperty -Path $PasteBase -Name "SubCommands" -Value ""
 
-# --- Large Mode ---
-$LargeKey = "$PasteBase\shell\Large"
+# ----- Large -----
+Write-Host "Working on task 4 of 6"
+$LargeKey = Join-Path $PasteBase "shell\Large"
 New-Item -Path $LargeKey -Force | Out-Null
-Set-ItemProperty -Path $LargeKey -Name "(default)" -Value "Paste (Large Files XOR USB)"
+Set-ItemProperty -Path $LargeKey -Name "MUIVerb" -Value "Paste (Large Files / USB)"
 
-$LargeCmd = "$LargeKey\command"
+$LargeCmd = Join-Path $LargeKey "command"
 New-Item -Path $LargeCmd -Force | Out-Null
 
-$LargeCommand = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$PasteLauncher`" `"%V`" Large"
+$LargeCommand = "`"$PowerShellExe`" -NoProfile -ExecutionPolicy Bypass -File `"$PasteLauncher`" `"%V`" Large"
 Set-ItemProperty -Path $LargeCmd -Name "(default)" -Value $LargeCommand
 
-# --- Small Mode ---
-$SmallKey = "$PasteBase\shell\Small"
+# ----- Small -----
+Write-Host "Working on task 5 of 6"
+$SmallKey = Join-Path $PasteBase "shell\Small"
 New-Item -Path $SmallKey -Force | Out-Null
-Set-ItemProperty -Path $SmallKey -Name "(default)" -Value "Paste (Small Files)"
+Set-ItemProperty -Path $SmallKey -Name "MUIVerb" -Value "Paste (Small Files)"
 
-$SmallCmd = "$SmallKey\command"
+$SmallCmd = Join-Path $SmallKey "command"
 New-Item -Path $SmallCmd -Force | Out-Null
 
-$SmallCommand = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$PasteLauncher`" `"%V`" Small"
+$SmallCommand = "`"$PowerShellExe`" -NoProfile -ExecutionPolicy Bypass -File `"$PasteLauncher`" `"%V`" Small"
 Set-ItemProperty -Path $SmallCmd -Name "(default)" -Value $SmallCommand
 
-Write-Host "Robocopy Tools installed successfully."
+Write-Host "RobocopyContext installed successfully."
