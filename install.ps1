@@ -19,7 +19,9 @@ $PowerShellExe = "$($PSHOME)\powershell.exe"
 # =====================================================
 # 1️ STAGE (files + folders)
 # =====================================================
-Write-Host "Working on task 2 of 6... this one takes forever as it refreshes classes*"
+Write-Host "Working on task 2 of 6... refreshing context handles in classes* makes this one take forever..."
+$PowerShellExe = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe"
+
 $StageLocations = @(
     "HKCU:\Software\Classes\*\shell\RoboCopyStage",
     "HKCU:\Software\Classes\Directory\shell\RoboCopyStage"
@@ -30,11 +32,12 @@ foreach ($Base in $StageLocations) {
     New-Item -Path $Base -Force | Out-Null
     Set-ItemProperty -Path $Base -Name "MUIVerb" -Value "Stage with Robocopy"
     Set-ItemProperty -Path $Base -Name "Icon" -Value "imageres.dll,-5302"
+    Set-ItemProperty -Path $Base -Name "MultiSelectModel" -Value "Player"
 
     $Cmd = Join-Path $Base "command"
     New-Item -Path $Cmd -Force | Out-Null
 
-    $CommandString = "`"$PowerShellExe`" -NoProfile -ExecutionPolicy Bypass -File `"$CopyScript`""
+    $CommandString = "`"$PowerShellExe`" -NoProfile -ExecutionPolicy Bypass -File `"$CopyScript`" `"%*`""
     Set-ItemProperty -Path $Cmd -Name "(default)" -Value $CommandString
 }
 
