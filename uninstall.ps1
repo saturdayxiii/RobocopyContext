@@ -1,13 +1,14 @@
-Write-Host "Removing Robocopy Tools context menus..."
+Write-Host "Removing RobocopyContext menus. Window will close when complete..."
 
-$Paths = @(
-    "HKCU:\Software\Classes\*\shell\RoboCopyCopy",
-    "HKCU:\Software\Classes\Directory\shell\RoboCopyCopy",
+$Keys = @(
+    "HKCU:\Software\Classes\*\shell\RoboCopyStage",
+    "HKCU:\Software\Classes\Directory\shell\RoboCopyStage",
     "HKCU:\Software\Classes\Directory\Background\shell\RoboCopyPaste"
 )
 
-foreach ($Path in $Paths) {
-    Remove-Item -Path $Path -Recurse -Force -ErrorAction SilentlyContinue
+foreach ($Key in $Keys) {
+    Remove-Item -Path $Key -Recurse -Force -ErrorAction SilentlyContinue
+	Write-Host "Removed 1 of 3."
 }
 
-Write-Host "Uninstall complete."
+Write-Host "RobocopyContext removed."
